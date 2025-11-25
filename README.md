@@ -79,7 +79,7 @@ Este proyecto es privado y personal.
 ## 👤 Autor
 
 **Iván Alvarez**
-- Portfolio: [ivanlalvarez.dev](https://ivanlalvarez.dev)
+- Portfolio: [ivanlalvarez.dev](https://ivan-alvarez.vercel.app)
 - Email: ivanlalvarez.22@gmail.com
 - GitHub: [@ivanlalvarez22](https://github.com/ivanlalvarez22)
 - LinkedIn: [ivanlalvarez22](https://www.linkedin.com/in/ivanlalvarez22/)
