@@ -2,8 +2,9 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-import { useMemo } from "react"
+import { lazy, Suspense, useMemo } from "react"
+
+const ArrowRight = lazy(() => import("lucide-react").then(mod => ({ default: mod.ArrowRight })))
 
 export default function WorkSection() {
   const jobs = useMemo(() => [
@@ -129,7 +130,9 @@ export default function WorkSection() {
                 <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{job.description}</p>
                 <div className="flex items-center gap-2 text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <span className="text-sm">Ver detalles</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <Suspense fallback={<div className="w-4 h-4" />}>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Suspense>
                 </div>
               </div>
             </div>

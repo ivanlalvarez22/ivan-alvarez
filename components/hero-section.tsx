@@ -1,8 +1,12 @@
 "use client"
 
 import Image from "next/image"
-import { Code2, Shield, Database, Sparkles } from "lucide-react"
-import { useMemo, useEffect, useRef, useState } from "react"
+import { lazy, Suspense, useMemo, useEffect, useRef, useState, memo } from "react"
+
+// Lazy load icons to reduce initial bundle
+const Code2 = lazy(() => import("lucide-react").then(mod => ({ default: mod.Code2 })))
+const Shield = lazy(() => import("lucide-react").then(mod => ({ default: mod.Shield })))
+const Database = lazy(() => import("lucide-react").then(mod => ({ default: mod.Database })))
 
 export default function HeroSection() {
   const [typingText, setTypingText] = useState("")
@@ -115,7 +119,9 @@ export default function HeroSection() {
                 className="flex items-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 sm:py-3 bg-card border border-border rounded-xl sm:rounded-2xl hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300"
               >
                 <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gradient-to-br ${item.gradientClass}`}>
-                  <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
+                  <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
+                    <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
+                  </Suspense>
                 </div>
                 <span className="text-xs sm:text-sm font-semibold">{item.label}</span>
               </div>
@@ -124,17 +130,20 @@ export default function HeroSection() {
         </div>
 
         <div className="flex-shrink-0 animate-on-scroll stagger-2">
-          <div className="relative">
+          <div className="relative" style={{ isolation: "isolate" }}>
             <div className="absolute -inset-4 bg-gradient-to-r from-primary via-secondary to-accent rounded-full blur-2xl opacity-40 animate-spin-slow" />
             <div className="absolute -inset-2 bg-gradient-to-r from-primary via-secondary to-accent rounded-full opacity-60 pulse-glow" />
-            <div className="relative">
+            <div className="relative" style={{ isolation: "isolate" }}>
               <Image
                 src="/profile-hq.jpeg"
                 alt="Iván Álvarez"
                 width={280}
                 height={280}
+                sizes="(max-width: 640px) 200px, (max-width: 1024px) 240px, 280px"
                 className="relative rounded-full object-cover border-4 border-background shadow-2xl w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] lg:w-[280px] lg:h-[280px]"
                 priority
+                quality={90}
+                fetchPriority="high"
               />
             </div>
           </div>

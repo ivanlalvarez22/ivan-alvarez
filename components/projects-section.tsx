@@ -1,9 +1,11 @@
 "use client"
 
 import Image from "next/image"
-import { ExternalLink, Github } from "lucide-react"
-import { useMemo } from "react"
+import { lazy, Suspense, useMemo } from "react"
 import Link from "next/link"
+
+const ExternalLink = lazy(() => import("lucide-react").then(mod => ({ default: mod.ExternalLink })))
+const Github = lazy(() => import("lucide-react").then(mod => ({ default: mod.Github })))
 
 export default function ProjectsSection() {
   const projects = useMemo(() => [
@@ -49,18 +51,21 @@ export default function ProjectsSection() {
                 className="relative aspect-video overflow-hidden bg-gradient-to-br from-muted to-background rounded-2xl border border-border/50 shadow-md group/image block"
               >
                 <Image
-                  src={`${project.image}?v=2`}
+                  src={project.image}
                   alt={`Screenshot de ${project.name}`}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  quality={60}
                   loading="lazy"
-                  unoptimized
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-4">
                   <div className="flex items-center gap-2 text-white text-sm font-semibold">
                     <span>Visitar proyecto</span>
-                    <ExternalLink className="w-4 h-4" />
+                    <Suspense fallback={null}>
+                      <ExternalLink className="w-4 h-4" />
+                    </Suspense>
                   </div>
                 </div>
               </Link>
@@ -83,7 +88,9 @@ export default function ProjectsSection() {
                     className="flex-shrink-0 p-2 rounded-lg bg-muted hover:bg-primary/10 hover:text-primary transition-colors"
                     aria-label={`Visitar ${project.name}`}
                   >
-                    <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
+                      <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </Suspense>
                   </Link>
                 </div>
 

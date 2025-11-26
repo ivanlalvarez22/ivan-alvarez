@@ -1,7 +1,10 @@
 "use client"
 
-import { useEffect, useCallback, useState, lazy, Suspense, useRef } from "react"
-import { Copy, Check } from "lucide-react"
+import { useEffect, useCallback, useState, lazy, Suspense, useRef, memo } from "react"
+
+// Lazy load icons to reduce initial bundle
+const Copy = lazy(() => import("lucide-react").then(mod => ({ default: mod.Copy })))
+const Check = lazy(() => import("lucide-react").then(mod => ({ default: mod.Check })))
 
 const BackgroundBlobs = lazy(() => import("@/components/background-blobs"))
 const Navigation = lazy(() => import("@/components/navigation"))
@@ -36,7 +39,10 @@ export default function Home() {
 
   useEffect(() => {
     setIsMounted(true)
-    document.documentElement.classList.add("js-enabled")
+    // Use requestAnimationFrame to avoid forced reflow
+    requestAnimationFrame(() => {
+      document.documentElement.classList.add("js-enabled")
+    })
   }, [])
 
   useEffect(() => {
@@ -45,62 +51,65 @@ export default function Home() {
     let mounted = true
     let timeoutId: NodeJS.Timeout | null = null
 
+    // Simplified observer - less overhead for mobile
     const initObserver = () => {
       if (!mounted) return
 
       if (!("IntersectionObserver" in window)) {
-        const elements = document.querySelectorAll(".animate-on-scroll")
-        elements.forEach((el) => el.classList.add("visible"))
+        // Fallback: show all immediately
+        requestAnimationFrame(() => {
+          const elements = document.querySelectorAll(".animate-on-scroll")
+          elements.forEach((el) => el.classList.add("visible"))
+        })
         return
       }
 
+      // Single RAF - simpler and faster
       requestAnimationFrame(() => {
         if (!mounted) return
 
+        const elements = document.querySelectorAll(".animate-on-scroll:not(.visible)")
+        if (elements.length === 0) return
+
         observerRef.current = new IntersectionObserver(
           (entries) => {
+            // Process in single batch
+            const toUpdate: HTMLElement[] = []
             entries.forEach((entry) => {
-              if (entry.isIntersecting && entry.target instanceof HTMLElement && mounted) {
-                requestAnimationFrame(() => {
-                  if (mounted && entry.target.isConnected) {
-                    entry.target.classList.add("visible")
-                    if (observerRef.current && entry.target.isConnected) {
-                      try {
-                        observerRef.current.unobserve(entry.target)
-                      } catch (e) {
-                        // Element may have been removed
-                      }
-                    }
-                  }
-                })
+              if (entry.isIntersecting && entry.target instanceof HTMLElement) {
+                toUpdate.push(entry.target)
               }
             })
+
+            if (toUpdate.length > 0) {
+              requestAnimationFrame(() => {
+                toUpdate.forEach((el) => {
+                  if (mounted && el.isConnected) {
+                    el.classList.add("visible")
+                    observerRef.current?.unobserve(el)
+                  }
+                })
+              })
+            }
           },
-          { threshold: 0.05, rootMargin: "20px" },
+          { threshold: 0.05, rootMargin: "100px" },
         )
 
-        const elements = document.querySelectorAll(".animate-on-scroll:not(.visible)")
+        // Observe all at once - simpler
         elements.forEach((el) => {
           if (el.isConnected && observerRef.current) {
-            try {
-              observerRef.current.observe(el)
-            } catch (e) {
-              // Element may have been removed
-            }
+            observerRef.current.observe(el)
           }
         })
 
+        // Fallback timeout
         timeoutId = setTimeout(() => {
           if (mounted && observerRef.current) {
             const unobserved = document.querySelectorAll(".animate-on-scroll:not(.visible)")
             unobserved.forEach((el) => {
               if (el.isConnected) {
                 el.classList.add("visible")
-                try {
-                  observerRef.current?.unobserve(el)
-                } catch (e) {
-                  // Element may have been removed
-                }
+                observerRef.current?.unobserve(el)
               }
             })
           }
@@ -108,27 +117,14 @@ export default function Home() {
       })
     }
 
-    const scheduleWork = (callback: () => void) => {
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(callback, { timeout: 1000 })
-      } else {
-        setTimeout(callback, 300)
-      }
-    }
-
-    scheduleWork(initObserver)
+    // Delay initialization to not block initial render
+    setTimeout(initObserver, 200)
 
     return () => {
       mounted = false
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-      }
+      if (timeoutId) clearTimeout(timeoutId)
       if (observerRef.current) {
-        try {
-          observerRef.current.disconnect()
-        } catch (e) {
-          // Ignore errors during cleanup
-        }
+        observerRef.current.disconnect()
         observerRef.current = null
       }
     }
@@ -192,11 +188,13 @@ export default function Home() {
               aria-label="Copiar email"
             >
               <span className="gradient-text">{emailCopied ? "¡Copiado!" : "ivanlalvarez.22@gmail.com"}</span>
-              {emailCopied ? (
-                <Check className="w-4 h-4 text-green-500" />
-              ) : (
-                <Copy className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-              )}
+              <Suspense fallback={null}>
+                {emailCopied ? (
+                  <Check className="w-4 h-4 text-green-500" />
+                ) : (
+                  <Copy className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                )}
+              </Suspense>
             </button>
           </div>
         </footer>

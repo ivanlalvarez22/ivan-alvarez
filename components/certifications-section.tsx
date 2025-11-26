@@ -2,8 +2,9 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Award } from "lucide-react"
-import { useMemo } from "react"
+import { lazy, Suspense, useMemo } from "react"
+
+const Award = lazy(() => import("lucide-react").then(mod => ({ default: mod.Award })))
 
 interface CertificationsSectionProps {
   onCertClick: (cert: { image: string; title: string; issuer: string; url?: string }) => void
@@ -68,8 +69,10 @@ export default function CertificationsSection({ onCertClick }: CertificationsSec
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-contain p-6"
-                  unoptimized={cert.image?.startsWith("http")}
+                  quality={55}
                   loading="lazy"
+                  decoding="async"
+                  unoptimized={cert.image?.startsWith("http")}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = "/placeholder.svg";
@@ -90,7 +93,9 @@ export default function CertificationsSection({ onCertClick }: CertificationsSec
                 title="Ver certificación"
                 className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 bg-gradient-to-r ${cert.gradient} text-primary-foreground rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity cursor-pointer`}
               >
-                <Award className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <Suspense fallback={<div className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}>
+                  <Award className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                </Suspense>
                 Certificado
               </Link>
             </div>

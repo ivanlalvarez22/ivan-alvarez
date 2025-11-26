@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { ArrowRight } from "lucide-react"
+import { lazy, Suspense } from "react"
 import {
   Dialog,
   DialogContent,
@@ -9,6 +9,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"
+
+const ArrowRight = lazy(() => import("lucide-react").then(mod => ({ default: mod.ArrowRight })))
 
 interface CertificationModalProps {
   cert: {
@@ -57,9 +59,10 @@ export default function CertificationModal({ cert, onClose }: CertificationModal
               height={2000}
               className="w-full h-auto max-w-full max-h-[calc(92vh-120px)] object-contain select-none"
               unoptimized={cert.image.startsWith("http")}
-              quality={90}
+              quality={85}
               draggable={false}
-              loading="lazy"
+              loading="eager"
+              sizes="92vw"
             />
           </div>
         </div>
@@ -72,7 +75,9 @@ export default function CertificationModal({ cert, onClose }: CertificationModal
             className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-xs font-semibold"
           >
             Abrir en nueva pestaña
-            <ArrowRight className="w-3 h-3" />
+            <Suspense fallback={<div className="w-3 h-3" />}>
+              <ArrowRight className="w-3 h-3" />
+            </Suspense>
           </a>
         </div>
       </DialogContent>

@@ -23,6 +23,12 @@ const nextConfig = {
   turbopack: {},
   images: {
     formats: ["image/avif", "image/webp"],
+    // Optimize image quality and sizes
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Minimum quality for better compression
+    minimumCacheTTL: 60,
+    // Optimize remote images
     remotePatterns: [
       {
         protocol: "https",
@@ -53,8 +59,8 @@ const nextConfig = {
         minimize: true,
         splitChunks: {
           chunks: "all",
-          minSize: 20000,
-          maxSize: 200000,
+          minSize: 15000,
+          maxSize: 150000,
           cacheGroups: {
             default: false,
             vendors: false,
@@ -74,13 +80,14 @@ const nextConfig = {
               priority: 35,
               enforce: true,
             },
-            // Separate chunk for lucide-react
+            // Separate chunk for lucide-react - smaller chunks
             lucide: {
               name: "lucide",
               test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
               chunks: "async",
               priority: 30,
               enforce: true,
+              maxSize: 50000,
             },
             // Separate chunk for radix-ui
             radix: {
@@ -89,14 +96,16 @@ const nextConfig = {
               chunks: "async",
               priority: 25,
               enforce: true,
+              maxSize: 100000,
             },
-            // Other vendor libraries
+            // Other vendor libraries - smaller chunks
             vendor: {
               name: "vendor",
               test: /[\\/]node_modules[\\/]/,
               chunks: "async",
               priority: 20,
               minChunks: 1,
+              maxSize: 100000,
               reuseExistingChunk: true,
             },
             // Common chunk for shared code
@@ -105,6 +114,7 @@ const nextConfig = {
               minChunks: 2,
               chunks: "all",
               priority: 10,
+              maxSize: 50000,
               reuseExistingChunk: true,
             },
           },

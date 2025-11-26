@@ -205,18 +205,13 @@
 
   .animate-on-scroll {
     opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    transform: translateY(0) translateZ(0);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
   }
 
   .js-enabled .animate-on-scroll:not(.visible) {
     opacity: 0;
-    transform: translateY(30px);
-  }
-
-  .animate-on-scroll.visible {
-    opacity: 1;
-    transform: translateY(0);
+    transform: translateY(15px) translateZ(0);
   }
 
   @media (prefers-reduced-motion: reduce) {

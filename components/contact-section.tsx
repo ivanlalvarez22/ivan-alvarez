@@ -1,9 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { Github, Linkedin, Twitter, Mail, Rocket } from "lucide-react"
-import { useMemo } from "react"
+import { lazy, Suspense, useMemo } from "react"
 import { isValidUrl, isExternalUrl } from "@/lib/validation"
+
+const Github = lazy(() => import("lucide-react").then(mod => ({ default: mod.Github })))
+const Linkedin = lazy(() => import("lucide-react").then(mod => ({ default: mod.Linkedin })))
+const Twitter = lazy(() => import("lucide-react").then(mod => ({ default: mod.Twitter })))
+const Mail = lazy(() => import("lucide-react").then(mod => ({ default: mod.Mail })))
+const Rocket = lazy(() => import("lucide-react").then(mod => ({ default: mod.Rocket })))
 
 export default function ContactSection() {
   const socials = useMemo(() => [
@@ -49,7 +54,9 @@ export default function ContactSection() {
             <span className="gradient-text font-bold">ciberseguridad</span>.{" "}
             <span className="inline-flex items-center gap-2">
               Construyamos algo grande juntos.
-              <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-primary inline-block" />
+              <Suspense fallback={<div className="w-5 h-5 sm:w-6 sm:h-6 inline-block" />}>
+                <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-primary inline-block" />
+              </Suspense>
             </span>
           </p>
         </div>
@@ -71,7 +78,9 @@ export default function ContactSection() {
                 />
                 <div className="relative flex flex-col items-center gap-2 sm:gap-3 text-center">
                   <div className={`p-2 sm:p-2.5 lg:p-3 rounded-lg sm:rounded-xl bg-gradient-to-br ${social.color}`}>
-                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
+                    <Suspense fallback={<div className="w-5 h-5 sm:w-6 sm:h-6" />}>
+                      <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
+                    </Suspense>
                   </div>
                   <span className="text-xs sm:text-sm font-bold">{social.name}</span>
                 </div>
