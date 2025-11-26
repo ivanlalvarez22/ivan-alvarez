@@ -92,17 +92,22 @@ export default function HeroSection() {
     <section className="mb-20 sm:mb-32 lg:mb-40">
       <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-16 mb-8 sm:mb-12 lg:mb-16">
         <div className="flex-1 space-y-6 sm:space-y-8 w-full">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] pb-1 animate-on-scroll stagger-1 overflow-visible">
+          <h1 className="text-3xl min-[385px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] pb-1 animate-on-scroll stagger-1">
             <span className="block text-lg sm:text-xl md:text-2xl font-medium mb-2 sm:mb-3">
               Soy <span className="gradient-text">Iván Alvarez</span>.
             </span>
-            Software Developer &{" "}
-            <span
-              className={`inline-block ${isRed ? "gradient-text-red" : "gradient-text"}`}
-              style={{ minWidth: "1ch" }}
-            >
-              {typingText}
-              <span className="animate-pulse">|</span>
+            <span className="block">
+              <span className="block">Software Developer</span>
+              <span className="block">
+                &{" "}
+                <span
+                  className={`inline-block ${isRed ? "gradient-text-red" : "gradient-text"}`}
+                  style={{ minWidth: "1ch" }}
+                >
+                  {typingText}
+                  <span className="animate-pulse">|</span>
+                </span>
+              </span>
             </span>
           </h1>
 
@@ -112,18 +117,18 @@ export default function HeroSection() {
             <span className="text-accent font-semibold">Desarrollo de Software</span>.
           </p>
 
-          <div className="flex flex-wrap gap-3 sm:gap-4 pt-3 sm:pt-4 animate-on-scroll stagger-3">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 pt-3 sm:pt-4 animate-on-scroll stagger-3">
             {features.map((item) => (
               <div
                 key={item.label}
-                className="flex items-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 sm:py-3 bg-card border border-border rounded-xl sm:rounded-2xl hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300"
+                className="flex items-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 sm:py-3 bg-card border border-border rounded-xl sm:rounded-2xl hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto"
               >
-                <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gradient-to-br ${item.gradientClass}`}>
+                <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gradient-to-br ${item.gradientClass} flex-shrink-0`}>
                   <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
                     <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
                   </Suspense>
                 </div>
-                <span className="text-xs sm:text-sm font-semibold">{item.label}</span>
+                <span className="text-xs sm:text-sm font-semibold whitespace-nowrap">{item.label}</span>
               </div>
             ))}
           </div>
@@ -152,7 +157,7 @@ export default function HeroSection() {
 
       <div className="space-y-4 sm:space-y-6 max-w-3xl animate-on-scroll stagger-4">
         <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-          Desarrollador de software especializado en Python con más de 4 años de experiencia en web scraping, extracción de datos, seguridad informática y desarrollo backend. Ofrezco soluciones personalizadas que incluyen desarrollo de software a medida, sistemas de scraping, auditorías de seguridad y análisis de vulnerabilidades.
+          Desarrollador de software especializado en Python con más de 4 años creando soluciones de web scraping, automatización de datos, seguridad informática y desarrollo de software. Ofrezco servicios profesionales que abarcan desarrollo a medida, extracción de datos, auditorías de seguridad y análisis de vulnerabilidades.
         </p>
       </div>
     </section>
