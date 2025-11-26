@@ -26,8 +26,10 @@ const nextConfig = {
     // Optimize image quality and sizes
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    // Minimum quality for better compression
-    minimumCacheTTL: 60,
+    // Configure allowed image qualities
+    qualities: [55, 60, 75, 90],
+    // Minimum quality for better compression - increased for better mobile caching
+    minimumCacheTTL: 31536000, // 1 year
     // Optimize remote images
     remotePatterns: [
       {
@@ -161,6 +163,46 @@ const nextConfig = {
       {
         // Optimize CSS caching
         source: "/_next/static/css/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // Optimize JavaScript caching - critical for mobile performance
+        source: "/_next/static/chunks/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // Optimize JavaScript framework files
+        source: "/_next/static/:buildId/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // Optimize image caching
+        source: "/:path*\\.(jpg|jpeg|png|webp|avif|gif|svg|ico)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // Optimize font caching
+        source: "/:path*\\.(woff|woff2|ttf|otf|eot)",
         headers: [
           {
             key: "Cache-Control",

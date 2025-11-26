@@ -47,18 +47,18 @@ export default function ContactSection() {
 
       <div className="space-y-6 sm:space-y-8 lg:space-y-10 animate-on-scroll">
         <div className="p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border border-primary/20">
-          <p className="text-base sm:text-lg lg:text-xl text-foreground leading-relaxed max-w-2xl font-medium">
+          <div className="text-base sm:text-lg lg:text-xl text-foreground leading-relaxed max-w-2xl font-medium">
             Disponible para consultorías, colaboraciones o discusiones sobre proyectos de{" "}
             <span className="gradient-text font-bold">desarrollo de software</span>,{" "}
             <span className="gradient-text font-bold">web scraping</span> o trabajos nuevos en{" "}
             <span className="gradient-text font-bold">ciberseguridad</span>.{" "}
             <span className="inline-flex items-center gap-2">
               Construyamos algo grande juntos.
-              <Suspense fallback={<div className="w-5 h-5 sm:w-6 sm:h-6 inline-block" />}>
+              <Suspense fallback={<span className="w-5 h-5 sm:w-6 sm:h-6 inline-block" />}>
                 <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-primary inline-block" />
               </Suspense>
             </span>
-          </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">

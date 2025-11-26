@@ -123,6 +123,30 @@
     overflow-x: hidden;
     width: 100%;
   }
+  
+  /* Scroll offset for fixed navbar */
+  section[id] {
+    scroll-margin-top: 80px;
+  }
+  
+  /* Prevent body scroll when mobile menu is open */
+  body.menu-open {
+    overflow: hidden;
+  }
+  
+  /* Simple mobile menu animation */
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  .mobile-menu-slide {
+    animation: slide-in-right 0.3s ease-out;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
     overflow-x: hidden;
@@ -244,6 +268,28 @@
     animation: blob-morph 8s ease-in-out infinite;
   }
 
+  /* Mobile menu optimizations for better performance */
+  .mobile-menu-container {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .mobile-menu-item {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Optimize backdrop blur for mobile */
+  @supports (backdrop-filter: blur(1px)) {
+    .mobile-menu-backdrop {
+      will-change: opacity;
+      transform: translateZ(0);
+    }
+  }
+
 }
 
 @keyframes gradient-shift {
@@ -301,4 +347,42 @@
   75% {
     border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
   }
+}
+
+/* Mobile Menu Animations */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes menu-item-enter {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.menu-item-enter {
+  animation: menu-item-enter 0.4s ease-out forwards;
 }

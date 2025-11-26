@@ -93,9 +93,9 @@ export default function HeroSection() {
       <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-16 mb-8 sm:mb-12 lg:mb-16">
         <div className="flex-1 space-y-6 sm:space-y-8 w-full">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] pb-1 animate-on-scroll stagger-1 overflow-visible">
-            <div className="text-lg sm:text-xl md:text-2xl font-medium mb-2 sm:mb-3">
+            <span className="block text-lg sm:text-xl md:text-2xl font-medium mb-2 sm:mb-3">
               Soy <span className="gradient-text">Iván Alvarez</span>.
-            </div>
+            </span>
             Software Developer &{" "}
             <span
               className={`inline-block ${isRed ? "text-red-500" : "gradient-text"}`}
