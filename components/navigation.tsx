@@ -58,7 +58,7 @@ export default function Navigation() {
               e.preventDefault()
               window.scrollTo({ top: 0, behavior: "smooth" })
             }}
-            className="text-lg sm:text-xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent hover:scale-105 transition-transform px-3 py-1.5 rounded-full border border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
+            className="text-lg sm:text-xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent hover:scale-105 transition-transform"
             aria-label="Ir al inicio"
           >
             IA
@@ -126,7 +126,7 @@ export default function Navigation() {
             className="fixed inset-0 z-[55] md:hidden bg-background/95 backdrop-blur-sm"
             onClick={() => setIsMenuOpen(false)}
           />
-          <div className="fixed top-0 right-0 z-[60] md:hidden w-full max-w-sm h-full bg-background/95 backdrop-blur-xl border-l border-primary/20 shadow-2xl mobile-menu-slide">
+          <div className="fixed top-0 right-0 z-[60] md:hidden w-full max-w-sm h-full bg-background/95 backdrop-blur-xl border-l border-primary/20 shadow-2xl mobile-menu-slide flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-primary/10">
               <div className="text-xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
                 Menú
@@ -140,7 +140,7 @@ export default function Navigation() {
               </button>
             </div>
 
-            <nav className="flex flex-col p-6 gap-3">
+            <nav className="flex flex-col p-6 gap-3 flex-1 overflow-y-auto">
               <a
                 href="#hero"
                 onClick={(e) => handleNavClick("hero", e)}
@@ -177,6 +177,21 @@ export default function Navigation() {
                 Contacto
               </a>
             </nav>
+
+            {/* Footer del menú */}
+            <div className="border-t border-primary/10 p-6 mt-auto">
+              <div className="text-center space-y-2">
+                <div className="text-sm font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                  Ivan Alvarez
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Security Engineer
+                </div>
+                <div className="text-[10px] text-muted-foreground/70 mt-2">
+                  © 2025 Todos los derechos reservados
+                </div>
+              </div>
+            </div>
           </div>
         </>
       )}

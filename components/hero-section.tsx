@@ -98,7 +98,7 @@ export default function HeroSection() {
             </span>
             Software Developer &{" "}
             <span
-              className={`inline-block ${isRed ? "text-red-500" : "gradient-text"}`}
+              className={`inline-block ${isRed ? "gradient-text-red" : "gradient-text"}`}
               style={{ minWidth: "1ch" }}
             >
               {typingText}

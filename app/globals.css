@@ -184,6 +184,12 @@
     background-size: 200% auto;
   }
 
+  .gradient-text-red {
+    @apply bg-gradient-to-r from-red-500 via-red-600 to-red-400 bg-clip-text text-transparent;
+    animation: gradient-shift 8s ease infinite;
+    background-size: 200% auto;
+  }
+
   .gradient-border {
     position: relative;
     background: linear-gradient(to right, oklch(0.55 0.24 260), oklch(0.65 0.22 320), oklch(0.7 0.2 200));

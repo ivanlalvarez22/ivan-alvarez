@@ -2,19 +2,35 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { lazy, Suspense, useMemo } from "react"
+import { lazy, Suspense, useMemo, useState } from "react"
 
 const ArrowRight = lazy(() => import("lucide-react").then(mod => ({ default: mod.ArrowRight })))
+const ChevronDown = lazy(() => import("lucide-react").then(mod => ({ default: mod.ChevronDown })))
 
 export default function WorkSection() {
+  const [expandedJobs, setExpandedJobs] = useState<Set<number>>(new Set())
+  
+  const toggleJob = (index: number) => {
+    setExpandedJobs(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(index)) {
+        newSet.delete(index)
+      } else {
+        newSet.add(index)
+      }
+      return newSet
+    })
+  }
+
   const jobs = useMemo(() => [
     {
-      year: "Oct 2024 — Oct 2025",
+      year: "Oct 2024 — Ago 2025",
       role: "Python Developer",
       company: "AutoScraping",
       logo: "/logos/autoscraping.jpeg",
       url: "https://autoscraping.com/",
-      location: "EEUU - Delaware",
+      city: "Dover",
+      country: "Estados Unidos",
       workType: "Remoto",
       gradient: "from-primary to-primary/60",
       description:
@@ -26,7 +42,8 @@ export default function WorkSection() {
       company: "Eclypsium, Inc.",
       logo: "/logos/eclypsium.jpeg",
       url: "http://eclypsium.com/",
-      location: "Portland, Oregon",
+      city: "Portland",
+      country: "Estados Unidos",
       workType: "Remoto",
       gradient: "from-secondary to-secondary/60",
       description:
@@ -38,7 +55,8 @@ export default function WorkSection() {
       company: "ITSE - Instituto Tecnológico de Santiago del Estero",
       logo: "/logos/logoitse2.png",
       url: "http://itse.gob.ar/",
-      location: "Santiago del Estero",
+      city: "Santiago del Estero",
+      country: "Argentina",
       workType: "Presencial",
       gradient: "from-accent to-primary",
       description:
@@ -46,11 +64,12 @@ export default function WorkSection() {
     },
     {
       year: "Dic 2016 — Oct 2024",
-      role: "Programming Instructor",
+      role: "Profesor particular",
       company: "Universidad Nacional de Santiago del Estero",
       logo: "/logos/unse.jpeg",
       url: "https://www.unse.edu.ar/",
-      location: "Santiago del Estero",
+      city: "Santiago del Estero",
+      country: "Argentina",
       workType: "Híbrido",
       gradient: "from-accent to-accent/60",
       description:
@@ -108,11 +127,11 @@ export default function WorkSection() {
                       {job.role}
                     </h3>
                     <p className="text-base sm:text-lg text-muted-foreground font-semibold">{job.company}</p>
-                    {(job.location || job.workType) && (
+                    {(job.city || job.country || job.workType) && (
                       <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                        {job.location && (
+                        {(job.city || job.country) && (
                           <span className="text-xs sm:text-sm text-muted-foreground">
-                            📍 {job.location}
+                            📍 {[job.city, job.country].filter(Boolean).join(", ")}
                           </span>
                         )}
                         {job.workType && (
@@ -127,12 +146,40 @@ export default function WorkSection() {
                     {job.year}
                   </div>
                 </div>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{job.description}</p>
-                <div className="flex items-center gap-2 text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <span className="text-sm">Ver detalles</span>
-                  <Suspense fallback={<div className="w-4 h-4" />}>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Suspense>
+                <div>
+                  <div className="md:block">
+                    {expandedJobs.has(index) ? (
+                      <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                        {job.description}
+                      </p>
+                    ) : (
+                      <>
+                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed md:block line-clamp-3 md:line-clamp-none">
+                          {job.description}
+                        </p>
+                        <button
+                          onClick={() => toggleJob(index)}
+                          className="md:hidden mt-2 flex items-center gap-1 text-primary font-semibold text-sm hover:opacity-80 transition-opacity"
+                        >
+                          <span>Ver más</span>
+                          <Suspense fallback={<div className="w-4 h-4" />}>
+                            <ChevronDown className="w-4 h-4" />
+                          </Suspense>
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  {expandedJobs.has(index) && (
+                    <button
+                      onClick={() => toggleJob(index)}
+                      className="md:hidden mt-2 flex items-center gap-1 text-primary font-semibold text-sm hover:opacity-80 transition-opacity"
+                    >
+                      <span>Ver menos</span>
+                      <Suspense fallback={<div className="w-4 h-4" />}>
+                        <ChevronDown className="w-4 h-4 rotate-180" />
+                      </Suspense>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
