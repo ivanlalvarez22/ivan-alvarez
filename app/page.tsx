@@ -182,7 +182,7 @@ export default function Home() {
             <div className="font-medium text-center md:text-left">© 2025 Ivan Alvarez. Todos los derechos reservados.</div>
             <button
               onClick={handleCopyEmail}
-              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium group"
+              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium group cursor-pointer"
               aria-label="Copiar email"
             >
               <span className="gradient-text">{emailCopied ? "¡Copiado!" : "ivanlalvarez.22@gmail.com"}</span>
