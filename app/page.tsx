@@ -2,18 +2,17 @@
 
 import { useEffect, useCallback, useState, lazy, Suspense, useRef } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
+import { Copy, Check } from "lucide-react"
 
-const Copy = lazy(() => import("lucide-react").then(mod => ({ default: mod.Copy })))
-const Check = lazy(() => import("lucide-react").then(mod => ({ default: mod.Check })))
+import BackgroundBlobs from "@/components/background-blobs"
+import Navigation from "@/components/navigation"
+import HeroSection from "@/components/hero-section"
+import WorkSection from "@/components/work-section"
+import ProjectsSection from "@/components/projects-section"
+import CertificationsSection from "@/components/certifications-section"
+import ContactSection from "@/components/contact-section"
 
-const BackgroundBlobs = lazy(() => import("@/components/background-blobs"))
-const Navigation = lazy(() => import("@/components/navigation"))
-const HeroSection = lazy(() => import("@/components/hero-section"))
 const CertificationModal = lazy(() => import("@/components/certification-modal"))
-const WorkSection = lazy(() => import("@/components/work-section"))
-const ProjectsSection = lazy(() => import("@/components/projects-section"))
-const CertificationsSection = lazy(() => import("@/components/certifications-section"))
-const ContactSection = lazy(() => import("@/components/contact-section"))
 const LoadingScreen = lazy(() => import("@/components/loading-screen"))
 
 export default function Home() {
@@ -45,6 +44,14 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(false)
+    }, 3000)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
+  useEffect(() => {
     setIsMounted(true)
     requestAnimationFrame(() => {
       document.documentElement.classList.add("js-enabled")
@@ -52,15 +59,59 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    if (!isMounted || typeof window === "undefined") return
+    if (typeof window === "undefined") return
 
-    if (isMobile) {
-      requestAnimationFrame(() => {
-        const elements = document.querySelectorAll(".animate-on-scroll")
-        elements.forEach((el) => el.classList.add("visible"))
-      })
-      return
+    let timers: NodeJS.Timeout[] = []
+
+    const ensureElementsVisible = () => {
+      const isMobileDevice = window.innerWidth < 768 || isMobile
+      
+      if (isMobileDevice) {
+        const timer = setTimeout(() => {
+          const elements = document.querySelectorAll(".animate-on-scroll:not(.visible)")
+          elements.forEach((el) => {
+            if (el instanceof HTMLElement) {
+              el.classList.add("visible")
+            }
+          })
+        }, 300)
+        timers.push(timer)
+      }
     }
+
+    ensureElementsVisible()
+    
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", ensureElementsVisible)
+    } else {
+      ensureElementsVisible()
+    }
+    
+    window.addEventListener("load", ensureElementsVisible)
+    
+    return () => {
+      timers.forEach(timer => clearTimeout(timer))
+      document.removeEventListener("DOMContentLoaded", ensureElementsVisible)
+      window.removeEventListener("load", ensureElementsVisible)
+    }
+  }, [isMobile])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    if (isMobile || window.innerWidth < 768) {
+      const timer = setTimeout(() => {
+        const elements = document.querySelectorAll(".animate-on-scroll")
+        elements.forEach((el) => {
+          if (el instanceof HTMLElement) {
+            el.classList.add("visible")
+          }
+        })
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+
+    if (!isMounted) return
 
     let mounted = true
     let timeoutId: NodeJS.Timeout | null = null
@@ -71,7 +122,11 @@ export default function Home() {
       if (!("IntersectionObserver" in window)) {
         requestAnimationFrame(() => {
           const elements = document.querySelectorAll(".animate-on-scroll")
-          elements.forEach((el) => el.classList.add("visible"))
+          elements.forEach((el) => {
+            if (el instanceof HTMLElement) {
+              el.classList.add("visible")
+            }
+          })
         })
         return
       }
@@ -115,7 +170,7 @@ export default function Home() {
           if (mounted && observerRef.current) {
             const unobserved = document.querySelectorAll(".animate-on-scroll:not(.visible)")
             unobserved.forEach((el) => {
-              if (el.isConnected) {
+              if (el.isConnected && el instanceof HTMLElement) {
                 el.classList.add("visible")
                 observerRef.current?.unobserve(el)
               }
@@ -125,7 +180,7 @@ export default function Home() {
       })
     }
 
-    setTimeout(initObserver, 200)
+    setTimeout(initObserver, 100)
 
     return () => {
       mounted = false
@@ -146,68 +201,52 @@ export default function Home() {
       )}
 
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-        <Suspense fallback={null}>
-          <BackgroundBlobs />
-        </Suspense>
+        <BackgroundBlobs />
 
-      <Suspense fallback={<nav className="fixed top-0 left-0 right-0 z-50 h-16" />}>
         <Navigation />
-      </Suspense>
 
-      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 pt-24 sm:pt-32 pb-16 sm:pb-24">
-        <Suspense fallback={<div className="mb-20 sm:mb-32 lg:mb-40 h-96" />}>
+        <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 pt-24 sm:pt-32 pb-16 sm:pb-24">
           <HeroSection />
-        </Suspense>
 
-        <Suspense fallback={<div className="mb-20 sm:mb-32 lg:mb-40 h-96" />}>
           <WorkSection />
-        </Suspense>
 
-        <Suspense fallback={<div className="mb-20 sm:mb-32 lg:mb-40 h-96" />}>
           <ProjectsSection />
-        </Suspense>
 
-        <Suspense fallback={<div className="mb-20 sm:mb-32 lg:mb-40 h-96" />}>
           <CertificationsSection onCertClick={handleCertClick} />
-        </Suspense>
 
-        {selectedCert && (
-          <Suspense fallback={null}>
-            <CertificationModal 
-              cert={selectedCert}
-              onClose={() => {
-              setSelectedCert(null)
-              setIsZoomed(false)
-              }}
-            />
-          </Suspense>
-        )}
+          {selectedCert && (
+            <Suspense fallback={<div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm" />}>
+              <CertificationModal 
+                cert={selectedCert}
+                onClose={() => {
+                setSelectedCert(null)
+                setIsZoomed(false)
+                }}
+              />
+            </Suspense>
+          )}
 
-        <Suspense fallback={<div className="mb-12 sm:mb-16 h-96" />}>
           <ContactSection />
-        </Suspense>
 
-        <footer className="pt-8 sm:pt-10 lg:pt-12 border-t border-border/50 animate-on-scroll">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
-            <div className="font-medium text-center md:text-left">© 2025 Ivan Alvarez. Todos los derechos reservados.</div>
-            <button
-              onClick={handleCopyEmail}
-              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium group cursor-pointer"
-              aria-label="Copiar email"
-            >
-              <span className="gradient-text">{emailCopied ? "¡Copiado!" : "ivanlalvarez.22@gmail.com"}</span>
-              <Suspense fallback={null}>
+          <footer className="pt-8 sm:pt-10 lg:pt-12 border-t border-border/50 animate-on-scroll">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+              <div className="font-medium text-center md:text-left">© 2025 Ivan Alvarez. Todos los derechos reservados.</div>
+              <button
+                onClick={handleCopyEmail}
+                className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium group cursor-pointer"
+                aria-label="Copiar email"
+              >
+                <span className="gradient-text">{emailCopied ? "¡Copiado!" : "ivanlalvarez.22@gmail.com"}</span>
                 {emailCopied ? (
                   <Check className="w-4 h-4 text-green-500" />
                 ) : (
                   <Copy className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
                 )}
-              </Suspense>
-            </button>
-          </div>
-        </footer>
-      </main>
-    </div>
+              </button>
+            </div>
+          </footer>
+        </main>
+      </div>
     </>
   )
 }

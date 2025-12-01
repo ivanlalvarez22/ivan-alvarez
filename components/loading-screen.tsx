@@ -1,87 +1,63 @@
 "use client"
 
-import { useEffect, useState, lazy, Suspense } from "react"
-
-const ShieldCheck = lazy(() => import("lucide-react").then(mod => ({ default: mod.ShieldCheck })))
-const Database = lazy(() => import("lucide-react").then(mod => ({ default: mod.Database })))
-const Code2 = lazy(() => import("lucide-react").then(mod => ({ default: mod.Code2 })))
+import { useEffect, useState } from "react"
+import { ShieldCheck, Database, Code2 } from "lucide-react"
 
 interface LoadingScreenProps {
   onComplete: () => void
 }
 
-const messages = [
-  { text: "Comprobando seguridad...", icon: "shield", duration: 300 },
-  { text: "Conectando bases de datos...", icon: "database", duration: 350 },
-  { text: "Compilando código...", icon: "code", duration: 300 },
-  { text: "Listo", icon: "all", duration: 200 },
-]
-
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(0)
-  const [displayedText, setDisplayedText] = useState("")
-  const [isTyping, setIsTyping] = useState(true)
+  const [progress, setProgress] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
-  const [showCursor, setShowCursor] = useState(true)
-  const [activeIcon, setActiveIcon] = useState<string>("shield")
+  const [activeIconIndex, setActiveIconIndex] = useState(0)
 
-  useEffect(() => {
-    setActiveIcon(messages[0].icon)
-  }, [])
-
-  useEffect(() => {
-    const cursorInterval = setInterval(() => {
-      setShowCursor((prev) => !prev)
-    }, 530)
-
-    return () => clearInterval(cursorInterval)
-  }, [])
+  const icons = [
+    { icon: ShieldCheck, label: "Ciberseguridad", color: "primary" },
+    { icon: Database, label: "Ing. de Datos", color: "secondary" },
+    { icon: Code2, label: "Desarrollo", color: "accent" },
+  ]
 
   useEffect(() => {
     if (isComplete) return
 
-    const currentMessage = messages[currentMessageIndex]
-    let charIndex = 0
-    let mounted = true
+    const interval = setInterval(() => {
+      setActiveIconIndex((prev) => (prev + 1) % icons.length)
+    }, 500)
 
-    const typingInterval = setInterval(() => {
+    return () => clearInterval(interval)
+  }, [isComplete, icons.length])
+
+  useEffect(() => {
+    let mounted = true
+    const duration = 2000
+    const startTime = Date.now()
+
+    const updateProgress = () => {
       if (!mounted) return
 
-      if (charIndex < currentMessage.text.length) {
-        setDisplayedText(currentMessage.text.slice(0, charIndex + 1))
-        charIndex++
-      } else {
-        clearInterval(typingInterval)
-        setIsTyping(false)
+      const elapsed = Date.now() - startTime
+      const newProgress = Math.min((elapsed / duration) * 100, 100)
+      setProgress(newProgress)
 
+      if (newProgress >= 100) {
+        setIsComplete(true)
         setTimeout(() => {
-          if (!mounted) return
-
-          if (currentMessageIndex < messages.length - 1) {
-            setCurrentMessageIndex((prev) => {
-              const nextIndex = prev + 1
-              setActiveIcon(messages[nextIndex].icon)
-              return nextIndex
-            })
-            setDisplayedText("")
-            setIsTyping(true)
-          } else {
-            setIsComplete(true)
-            setTimeout(() => {
-              if (mounted) {
-                onComplete()
-              }
-            }, 150)
+          if (mounted) {
+            onComplete()
           }
-        }, currentMessage.duration)
+        }, 300)
+      } else {
+        requestAnimationFrame(updateProgress)
       }
-    }, 40)
+    }
+
+    requestAnimationFrame(updateProgress)
 
     return () => {
       mounted = false
-      clearInterval(typingInterval)
     }
-  }, [currentMessageIndex, isComplete, onComplete])
+  }, [onComplete])
 
   return (
     <div
@@ -102,73 +78,42 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       </div>
 
       <div className="relative z-10 flex flex-col items-center gap-6 sm:gap-8">
-        {activeIcon === "all" ? (
-          <div className="flex items-center gap-4 sm:gap-6 md:gap-8 mb-4 animate-fade-in-up">
-            <div className="flex flex-col items-center gap-2 animate-fade-in-up">
-              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/20 hover:scale-110 transition-transform duration-300">
-                <Suspense fallback={<div className="w-8 h-8 sm:w-10 sm:h-10" />}>
-                  <ShieldCheck className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
-                </Suspense>
-              </div>
-              <span className="text-xs sm:text-sm font-medium text-muted-foreground text-center">Ciberseguridad</span>
-            </div>
-            
-            <div className="flex flex-col items-center gap-2 animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
-              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-secondary to-secondary/60 shadow-lg shadow-secondary/20 hover:scale-110 transition-transform duration-300">
-                <Suspense fallback={<div className="w-8 h-8 sm:w-10 sm:h-10" />}>
-                  <Database className="w-8 h-8 sm:w-10 sm:h-10 text-secondary-foreground" />
-                </Suspense>
-              </div>
-              <span className="text-xs sm:text-sm font-medium text-muted-foreground text-center">Ing. de Datos</span>
-            </div>
-            
-            <div className="flex flex-col items-center gap-2 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-accent to-accent/60 shadow-lg shadow-accent/20 hover:scale-110 transition-transform duration-300">
-                <Suspense fallback={<div className="w-8 h-8 sm:w-10 sm:h-10" />}>
-                  <Code2 className="w-8 h-8 sm:w-10 sm:h-10 text-accent-foreground" />
-                </Suspense>
-              </div>
-              <span className="text-xs sm:text-sm font-medium text-muted-foreground text-center">Desarrollo</span>
-            </div>
-          </div>
-        ) : (
-          <div className="mb-4">
-            <div className={`p-4 sm:p-5 rounded-2xl bg-gradient-to-br transition-all duration-500 ${
-              activeIcon === "shield" 
-                ? "from-primary to-primary/60 shadow-lg shadow-primary/20" 
-                : activeIcon === "database"
-                ? "from-secondary to-secondary/60 shadow-lg shadow-secondary/20"
-                : "from-accent to-accent/60 shadow-lg shadow-accent/20"
-            }`}>
-              <Suspense fallback={<div className="w-10 h-10 sm:w-12 sm:h-12" />}>
-                {activeIcon === "shield" && (
-                  <ShieldCheck className="w-10 h-10 sm:w-12 sm:h-12 text-primary-foreground md:pulse-glow" />
-                )}
-                {activeIcon === "database" && (
-                  <Database className="w-10 h-10 sm:w-12 sm:h-12 text-secondary-foreground md:pulse-glow" />
-                )}
-                {activeIcon === "code" && (
-                  <Code2 className="w-10 h-10 sm:w-12 sm:h-12 text-accent-foreground md:pulse-glow" />
-                )}
-              </Suspense>
-            </div>
-          </div>
-        )}
+        <div className="relative mb-4 flex items-center justify-center" style={{ minHeight: "120px", width: "200px" }}>
+          {icons.map((item, index) => {
+            const IconComponent = item.icon
+            const isActive = index === activeIconIndex
+            const colorClasses = {
+              primary: "from-primary to-primary/60 shadow-primary/20 text-primary-foreground",
+              secondary: "from-secondary to-secondary/60 shadow-secondary/20 text-secondary-foreground",
+              accent: "from-accent to-accent/60 shadow-accent/20 text-accent-foreground",
+            }[item.color]
 
-        <div className="text-xl sm:text-2xl md:text-3xl font-mono font-bold text-center px-4">
-          <span className="gradient-text">
-            {displayedText}
-            {showCursor && !isComplete && (
-              <span className="inline-block w-0.5 h-[1em] bg-primary ml-1 animate-pulse" />
-            )}
-          </span>
+            return (
+              <div
+                key={index}
+                className="flex flex-col items-center gap-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500"
+                style={{
+                  opacity: isActive ? 1 : 0,
+                  pointerEvents: isActive ? "auto" : "none",
+                }}
+              >
+                <div className={`p-3 sm:p-4 rounded-2xl bg-gradient-to-br ${colorClasses} shadow-lg ${isActive ? "animate-pulse" : ""}`}>
+                  <IconComponent
+                    className="w-8 h-8 sm:w-10 sm:h-10"
+                    style={{ animation: isActive ? "spin 3s linear infinite" : "none" }}
+                  />
+                </div>
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground text-center">{item.label}</span>
+              </div>
+            )
+          })}
         </div>
 
         <div className="w-48 sm:w-64 h-1 bg-muted rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-primary via-secondary to-accent transition-all duration-300 ease-out"
             style={{
-              width: `${((currentMessageIndex + 1) / messages.length) * 100}%`,
+              width: `${progress}%`,
             }}
           />
         </div>
