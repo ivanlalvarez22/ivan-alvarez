@@ -13,6 +13,13 @@ interface CertificationsSectionProps {
 export default function CertificationsSection({ onCertClick }: CertificationsSectionProps) {
   const certs = useMemo(() => [
     {
+      image: "https://storage.hackviser.com/file/hackviser-prod/certificates/29c567702f4b44da8f7dcf8db01dd30d.webp",
+      title: "Certified Web Security Expert",
+      issuer: "CWSE — Hackviser",
+      gradient: "from-primary to-accent",
+      url: "https://storage.hackviser.com/file/hackviser-prod/certificates/29c567702f4b44da8f7dcf8db01dd30d.webp",
+    },
+    {
       image: "https://storage.hackviser.com/file/hackviser-prod/certificates/34e3f9f92a1d4cada6e28177a6eb79ba.webp",
       title: "Certified Associate Penetration Tester",
       issuer: "CAPT — Hackviser",

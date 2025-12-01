@@ -89,7 +89,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         isComplete ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none hidden md:block">
         <div className="absolute top-1/4 -left-48 w-96 h-96 bg-primary/20 rounded-full blur-3xl float-animation motion-reduce:animate-none" />
         <div
           className="absolute top-1/2 -right-48 w-96 h-96 bg-secondary/20 rounded-full blur-3xl float-animation motion-reduce:animate-none"
@@ -142,13 +142,13 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             }`}>
               <Suspense fallback={<div className="w-10 h-10 sm:w-12 sm:h-12" />}>
                 {activeIcon === "shield" && (
-                  <ShieldCheck className="w-10 h-10 sm:w-12 sm:h-12 text-primary-foreground pulse-glow" />
+                  <ShieldCheck className="w-10 h-10 sm:w-12 sm:h-12 text-primary-foreground md:pulse-glow" />
                 )}
                 {activeIcon === "database" && (
-                  <Database className="w-10 h-10 sm:w-12 sm:h-12 text-secondary-foreground pulse-glow" />
+                  <Database className="w-10 h-10 sm:w-12 sm:h-12 text-secondary-foreground md:pulse-glow" />
                 )}
                 {activeIcon === "code" && (
-                  <Code2 className="w-10 h-10 sm:w-12 sm:h-12 text-accent-foreground pulse-glow" />
+                  <Code2 className="w-10 h-10 sm:w-12 sm:h-12 text-accent-foreground md:pulse-glow" />
                 )}
               </Suspense>
             </div>

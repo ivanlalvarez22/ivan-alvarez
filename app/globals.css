@@ -215,8 +215,10 @@
     @apply transition-all duration-700 ease-in-out;
   }
 
-  .hover-lift:hover {
-    @apply -translate-y-2 scale-[1.02];
+  @media (min-width: 768px) {
+    .hover-lift:hover {
+      @apply -translate-y-2 scale-[1.02];
+    }
   }
 
   .float-animation {
@@ -227,6 +229,71 @@
   .pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
     will-change: box-shadow;
+  }
+
+  @media (max-width: 767px) {
+    .pulse-glow:not(.pulse-glow-photo) {
+      animation: none;
+      will-change: auto;
+    }
+
+    .hover-lift:hover,
+    .hover-lift:active {
+      transform: none !important;
+      scale: none !important;
+    }
+
+    .animate-fade-in-up {
+      animation: none !important;
+    }
+
+    .float-animation {
+      animation: none !important;
+    }
+
+    [class*="hover:scale"]:hover:not(.gradient-text):not(.pulse-glow-photo) {
+      transform: none !important;
+      scale: none !important;
+    }
+
+    [class*="hover:-translate"]:hover:not(.gradient-text):not(.pulse-glow-photo) {
+      transform: none !important;
+    }
+
+    [class*="group-hover:scale"]:hover:not(.gradient-text):not(.pulse-glow-photo) {
+      transform: none !important;
+      scale: none !important;
+    }
+
+    [class*="group-hover:opacity"]:hover:not(.gradient-text):not(.pulse-glow-photo) {
+      opacity: inherit !important;
+    }
+
+    [class*="hover:border"]:hover,
+    [class*="hover:shadow"]:hover,
+    [class*="hover:text"]:hover,
+    [class*="hover:bg"]:hover {
+      border-color: inherit !important;
+      box-shadow: inherit !important;
+      color: inherit !important;
+      background-color: inherit !important;
+    }
+
+    [class*="group-hover:border"]:hover,
+    [class*="group-hover:shadow"]:hover,
+    [class*="group-hover:text"]:hover,
+    [class*="group-hover:bg"]:hover {
+      border-color: inherit !important;
+      box-shadow: inherit !important;
+      color: inherit !important;
+      background-color: inherit !important;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hover-lift:hover {
+      @apply -translate-y-2 scale-[1.02];
+    }
   }
 
   .fade-in-up {

@@ -1,9 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { lazy, Suspense, useMemo, useEffect, useRef, useState, memo } from "react"
+import { lazy, Suspense, useMemo, useEffect, useRef, useState } from "react"
 
-// Lazy load icons to reduce initial bundle
 const Code2 = lazy(() => import("lucide-react").then(mod => ({ default: mod.Code2 })))
 const Shield = lazy(() => import("lucide-react").then(mod => ({ default: mod.Shield })))
 const Database = lazy(() => import("lucide-react").then(mod => ({ default: mod.Database })))
@@ -136,8 +135,8 @@ export default function HeroSection() {
 
         <div className="flex-shrink-0 animate-on-scroll stagger-2">
           <div className="relative" style={{ isolation: "isolate" }}>
-            <div className="absolute -inset-4 bg-gradient-to-r from-primary via-secondary to-accent rounded-full blur-2xl opacity-40 animate-spin-slow" />
-            <div className="absolute -inset-2 bg-gradient-to-r from-primary via-secondary to-accent rounded-full opacity-60 pulse-glow" />
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary via-secondary to-accent rounded-full blur-2xl opacity-40 hidden md:block" style={{ animation: "spin 3s linear infinite" }} />
+            <div className="absolute -inset-2 bg-gradient-to-r from-primary via-secondary to-accent rounded-full opacity-60 pulse-glow pulse-glow-photo" />
             <div className="relative" style={{ isolation: "isolate" }}>
               <Image
                 src="/profile-hq.jpeg"

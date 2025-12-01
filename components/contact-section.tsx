@@ -70,7 +70,7 @@ export default function ContactSection() {
                 href={isValidUrl(social.url) ? social.url : "#"}
                 target={isExternalUrl(social.url) ? "_blank" : undefined}
                 rel={isExternalUrl(social.url) ? "noopener noreferrer" : undefined}
-                className="group relative p-4 sm:p-5 lg:p-6 rounded-xl sm:rounded-2xl border border-border bg-card shadow-lg shadow-black/5 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover-lift overflow-hidden"
+                className="group relative p-4 sm:p-5 lg:p-6 rounded-xl sm:rounded-2xl border border-border bg-card shadow-lg shadow-black/5 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover-lift animate-on-scroll overflow-hidden"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div

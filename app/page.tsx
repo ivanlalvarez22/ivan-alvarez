@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useCallback, useState, lazy, Suspense, useRef, memo } from "react"
+import { useEffect, useCallback, useState, lazy, Suspense, useRef } from "react"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const Copy = lazy(() => import("lucide-react").then(mod => ({ default: mod.Copy })))
 const Check = lazy(() => import("lucide-react").then(mod => ({ default: mod.Check })))
@@ -22,6 +23,7 @@ export default function Home() {
   const [emailCopied, setEmailCopied] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const observerRef = useRef<IntersectionObserver | null>(null)
+  const isMobile = useIsMobile()
   
   const handleCertClick = useCallback((cert: { image: string; title: string; issuer: string; url?: string }) => {
     setSelectedCert(cert)
@@ -51,6 +53,14 @@ export default function Home() {
 
   useEffect(() => {
     if (!isMounted || typeof window === "undefined") return
+
+    if (isMobile) {
+      requestAnimationFrame(() => {
+        const elements = document.querySelectorAll(".animate-on-scroll")
+        elements.forEach((el) => el.classList.add("visible"))
+      })
+      return
+    }
 
     let mounted = true
     let timeoutId: NodeJS.Timeout | null = null
@@ -125,7 +135,7 @@ export default function Home() {
         observerRef.current = null
       }
     }
-  }, [isMounted])
+  }, [isMounted, isMobile])
 
   return (
     <>
