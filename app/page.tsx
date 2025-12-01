@@ -11,9 +11,9 @@ import WorkSection from "@/components/work-section"
 import ProjectsSection from "@/components/projects-section"
 import CertificationsSection from "@/components/certifications-section"
 import ContactSection from "@/components/contact-section"
+import LoadingScreen from "@/components/loading-screen"
 
 const CertificationModal = lazy(() => import("@/components/certification-modal"))
-const LoadingScreen = lazy(() => import("@/components/loading-screen"))
 
 export default function Home() {
   const [selectedCert, setSelectedCert] = useState<{ image: string; title: string; issuer: string; url?: string } | null>(null)
@@ -195,12 +195,10 @@ export default function Home() {
   return (
     <>
       {isLoading && (
-        <Suspense fallback={null}>
-          <LoadingScreen onComplete={handleLoadingComplete} />
-        </Suspense>
+        <LoadingScreen onComplete={handleLoadingComplete} />
       )}
 
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      <div className={`min-h-screen bg-gradient-to-br from-background via-background to-primary/5 ${isLoading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <BackgroundBlobs />
 
         <Navigation />
