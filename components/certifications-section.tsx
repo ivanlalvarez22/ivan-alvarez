@@ -13,18 +13,18 @@ interface CertificationsSectionProps {
 export default function CertificationsSection({ onCertClick }: CertificationsSectionProps) {
   const certs = useMemo(() => [
     {
-      image: "https://storage.hackviser.com/file/hackviser-prod/certificates/29c567702f4b44da8f7dcf8db01dd30d.webp",
+      image: "https://storage.hackviser.com/file/hackviser-prod/certificates/1f99a156b5ec4d6684b16bb0d49c6253.webp",
       title: "Certified Web Security Expert",
       issuer: "CWSE — Hackviser",
       gradient: "from-primary to-accent",
-      url: "https://storage.hackviser.com/file/hackviser-prod/certificates/29c567702f4b44da8f7dcf8db01dd30d.webp",
+      url: "https://storage.hackviser.com/file/hackviser-prod/certificates/1f99a156b5ec4d6684b16bb0d49c6253.webp",
     },
     {
-      image: "https://storage.hackviser.com/file/hackviser-prod/certificates/34e3f9f92a1d4cada6e28177a6eb79ba.webp",
+      image: "https://storage.hackviser.com/file/hackviser-prod/certificates/26a7b2800ea44bfaaa4b857588139967.webp",
       title: "Certified Associate Penetration Tester",
       issuer: "CAPT — Hackviser",
       gradient: "from-primary to-secondary",
-      url: "https://storage.hackviser.com/file/hackviser-prod/certificates/34e3f9f92a1d4cada6e28177a6eb79ba.webp",
+      url: "https://storage.hackviser.com/file/hackviser-prod/certificates/26a7b2800ea44bfaaa4b857588139967.webp",
     },
     {
       image: "/certificates/cehpc.png",
