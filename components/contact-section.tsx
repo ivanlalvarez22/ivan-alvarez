@@ -39,7 +39,7 @@ export default function ContactSection() {
   ], [])
 
   return (
-    <section id="contact" className="mb-12 sm:mb-16">
+    <section id="contact" className="min-h-[100dvh] flex flex-col justify-center">
       <div className="flex items-center gap-3 sm:gap-6 mb-8 sm:mb-12 lg:mb-16 animate-on-scroll">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight gradient-text">Contacto</h2>
         <div className="flex-1 h-1 bg-gradient-to-r from-primary via-secondary to-transparent rounded-full" />

@@ -27,6 +27,13 @@ export default function CertificationsSection({ onCertClick }: CertificationsSec
       url: "https://storage.hackviser.com/file/hackviser-prod/certificates/26a7b2800ea44bfaaa4b857588139967.webp",
     },
     {
+      image: "/certificates/ciberseguridad-tecnico.png",
+      title: "Técnico en Ciberseguridad",
+      issuer: "Academia de Ciberseguridad",
+      gradient: "from-secondary to-primary",
+      url: "https://verify.academia-ciberseguridad.com/api/credential/9EI5M6yEqP",
+    },
+    {
       image: "/certificates/cehpc.png",
       title: "Ethical Hacking Professional Certification",
       issuer: "CEHPC™ — Certiprof",

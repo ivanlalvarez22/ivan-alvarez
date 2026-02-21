@@ -24,6 +24,19 @@ export default function WorkSection() {
 
   const jobs = useMemo(() => [
     {
+      year: "Ago 2025 — Dic 2025",
+      role: "Software Engineer",
+      company: "SourceStack",
+      logo: "/logos/sourcestack.jpeg",
+      url: "https://sourcestack.co/",
+      city: "San Francisco, California",
+      country: "Estados Unidos",
+      workType: "Remoto",
+      gradient: "from-primary to-secondary",
+      description:
+        "Desarrollé código en Python para extraer datos de ofertas laborales públicas a partir de enlaces proporcionados. Agregué y limpié datos provenientes de múltiples sistemas ATS, garantizando la consistencia y calidad de la información procesada. Gestioné sitios dinámicos y aseguré una extracción de datos confiable y actualizada, aplicando buenas prácticas de ingeniería de software y técnicas avanzadas de web scraping para mantener la estabilidad de los pipelines de datos.",
+    },
+    {
       year: "Oct 2024 — Ago 2025",
       role: "Python Developer",
       company: "AutoScraping",
